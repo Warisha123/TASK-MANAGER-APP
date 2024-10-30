@@ -46,23 +46,23 @@ class TaskManager {
   }
 
   List<Task> getCompletedTasks() {
-    List<Task> compl_task = [];
+    List<Task> complTask = [];
     for (int i = 0; i < tasks.length; i++) {
       if (tasks[i].iscompleted == true) {
-        compl_task.add(tasks[i]);
+        complTask.add(tasks[i]);
       }
     }
-    return compl_task;
+    return complTask;
   }
 
   List<Task> getIncompleteTasks() {
-    List<Task> incompl_task = [];
+    List<Task> incomplTask = [];
     for (int i = 0; i < tasks.length; i++) {
       if (!tasks[i].iscompleted) {
-        incompl_task.add(tasks[i]);
+        incomplTask.add(tasks[i]);
       }
     }
-    return incompl_task;
+    return incomplTask;
   }
 
   void toggleTaskCompletion(int index) {
@@ -82,10 +82,30 @@ class TaskManager {
     if (File(filePath).existsSync()) {
       final jsonString = File(filePath).readAsStringSync();
       final List<dynamic> jsonTasks = json.decode(jsonString);
-      tasks = jsonTasks.map((jsonTask) {
-        return Task(jsonTask['title'], jsonTask['description'],
-            jsonTask['isCompleted']);
-      }).toList();
+
+      // Debug: Print the loaded JSON
+      print('Loaded JSON: $jsonTasks');
+
+      tasks = jsonTasks
+          .map((jsonTask) {
+            // Check if jsonTask is a Map and contains the expected keys
+            if (jsonTask is Map<String, dynamic> &&
+                jsonTask.containsKey('title') &&
+                jsonTask.containsKey('description') &&
+                jsonTask.containsKey('iscompleted')) {
+              return Task(
+                jsonTask['title'],
+                jsonTask['description'],
+                jsonTask['iscompleted'],
+              );
+            } else {
+              print('Invalid task format: $jsonTask');
+              return null; // or handle the invalid format as needed
+            }
+          })
+          .where((task) => task != null)
+          .cast<Task>()
+          .toList();
     }
   }
 
@@ -125,8 +145,8 @@ void main() {
         print("Enter task description:");
         String description = stdin.readLineSync()!;
         print("Is the task completed? (true/false):");
-        bool is_completed = stdin.readLineSync()!.toLowerCase() == 'true';
-        Task newTask = Task(title, description, is_completed);
+        bool isCompleted = stdin.readLineSync()!.toLowerCase() == 'true';
+        Task newTask = Task(title, description, isCompleted);
         taskManager.addTask(newTask);
         break;
 
@@ -138,9 +158,9 @@ void main() {
         print("Enter new task description:");
         String newDescription = stdin.readLineSync()!;
         print("Is the task completed? (true/false):");
-        bool is_completed = stdin.readLineSync()!.toLowerCase() == 'true';
+        bool isCompleted = stdin.readLineSync()!.toLowerCase() == 'true';
         taskManager.updateTask(
-            index, Task(newTitle, newDescription, is_completed));
+            index, Task(newTitle, newDescription, isCompleted));
         break;
 
       case 3:
