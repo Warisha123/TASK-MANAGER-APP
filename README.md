@@ -23,16 +23,16 @@ The app is structured around two main classes: `Task` and `TaskManager`.
 - **Task Class**: Defines a single task with properties for title, description, and completion status, as well as a custom `toString` method for easy display of task details.
 - **TaskManager Class**: Manages a list of tasks, providing methods to add, update, delete, toggle, and search tasks. It also includes functionality to save tasks to a JSON file and load them back when the app starts.
 
-**output**
+## Output
 --- Task Manager ---
 
-Add a new task
-Update a task
-Delete a task
-List all tasks
-List completed tasks
-List incomplete tasks
-Toggle completion status of a task
-Search for a task by title
-Exit
+1.Add a new task
+2.Update a task
+3.Delete a task
+4.List all tasks
+5.List completed tasks
+6.List incomplete tasks
+7.Toggle completion status of a task
+8.Search for a task by title
+0.Exit
 
